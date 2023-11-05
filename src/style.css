@@ -7,12 +7,16 @@
   font-size: 130%;
 }
 
-.md-col-left {
+.md-table-col {
+  padding: 8px;
+}
+
+.md-table-col-left {
   text-align: left;
 }
-.md-col-center {
+.md-table-col-center {
   text-align: center;
 }
-.md-col-right {
+.md-table-col-right {
   text-align: right;
 }

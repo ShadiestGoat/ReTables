@@ -9,7 +9,8 @@ A plug to render markdown tables, in discord.
 - Utility classes:
   - Table: md-table
   - Rows: md-table-row
-  - Alignment: md-col-{left/center/right}
+  - Cell: md-table-col
+  - Alignment: md-table-col-{left/center/right}
   - Heading columns: md-table-h
 
 ## TODO Before Release

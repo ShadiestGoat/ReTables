@@ -52,7 +52,7 @@ export function createTableParser(inject: Injector): void {
           return {}
         },
         react(capture: {content: RenderASTNode, isTableHeading: boolean, align: Justification}, render, state) {
-          let alignClass = `md-col-${capture.align}`
+          let alignClass = `md-table-col md-table-col-${capture.align}`
           
           if (capture.isTableHeading) {
             return <th className={`md-table-h ${alignClass}`}>

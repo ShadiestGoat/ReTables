@@ -2,36 +2,7 @@ import { Injector, common } from "replugged";
 const { parser } = common;
 import { ParserRule, SingleASTNode } from "simple-markdown"
 import "./style.css"
-
-// | Table h1 | table H2 |
-// |--------|--|
-// | Bad table | HEHHE
-
-const tableCellReg = /((?<!\||\\)\|(?!\|)).+?((?<!(\||\\))\|(?!\|))/g
-const tableHeadingReg = /^:?-+?:?$/
-
-// Thanks, SO! https://stackoverflow.com/a/20835462/13862631
-/**
- * MUST USE A GLOBAL REGEX
- */
-function matchOverlap(input: string, re: RegExp): string[] {
-  const r: string[] = []
-  let m = re.exec(input)
-  
-  while (m) {
-      re.lastIndex -= m[0].length - 1;
-      r.push(m[0]);
-      m = re.exec(input)
-  }
-
-  return r;
-}
-
-enum Justification {
-  LEFT = "left",
-  CENTER = "center",
-  RIGHT = "right"
-}
+import {Justification, createJustification, parseTable} from "./utils"
 
 type RenderASTNode = SingleASTNode | SingleASTNode[]
 
@@ -86,37 +57,16 @@ export function createTableParser(inject: Injector): void {
       table: {
         order: 2,
         match(source, state, prevCapture) {
-          if (prevCapture || !source.startsWith("|") || !source.trim().endsWith("|")) {
+          if (prevCapture) {
+            return null
+          }
+          const out = parseTable(source)
+
+          if (!out) {
             return null
           }
 
-          const lines = source.split("\n")
-
-          let table: string[][] = [],
-              lastIndex = 0
-
-          for (let v of lines) {
-            const l = v.trim()
-            const cells = matchOverlap(l, tableCellReg).map(c => c.slice(1, -1).trim())
-            if (table.length && cells.length != table[0].length) {
-              break
-            }
-            if (table.length == 1) {
-              for (let c of cells) {
-                if (!tableHeadingReg.test(c)) {
-                  return null
-                }
-              }
-            }
-
-            table.push(cells)
-
-            lastIndex += v.length + 1 // +1 for the newline
-          }
-          
-          if (table.length <= 1) {
-            return null
-          }
+          const {table, lastIndex} = out
 
           return {
             0: source.slice(0, lastIndex),
@@ -130,12 +80,7 @@ export function createTableParser(inject: Injector): void {
           
           state.inline = true
 
-          const just = table[1].map(v => {
-            const l = v.startsWith(":")
-            const r = v.endsWith(":")
-
-            return l && r ? Justification.CENTER : r ? Justification.RIGHT : Justification.LEFT
-          })
+          const just = createJustification(table[1])
 
           const parsedTable: Table = {
             content: [

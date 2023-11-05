@@ -191,4 +191,7 @@ export function createPreMsgFormatter(inject: Injector): void {
   inject.before(messages, "sendMessage", (args) => {
     args[1].content = format(args[1].content)
   })
+  inject.before(messages, "editMessage", (args) => {
+    args[2].content = format(args[2].content)
+  })
 }

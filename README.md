@@ -13,7 +13,7 @@ A plug to render markdown tables, in discord.
   - Alignment: md-table-col-{left/center/right}
   - Heading columns: md-table-h
 - Pre-format tables before sending them (so that non plugin users still see tables)
-  - Note - because of fonts not being monospaced, its hard to create a truly good table formatter. The implementation tries it's best with text width, but unfortunately it can't be perfect.
+  - Note - because of fonts not being monospaced, its hard to create a truly good table formatter. The font formatter tries it's best with text width, but unfortunately it can't be perfect.
 
 ## TODO Before Release
 

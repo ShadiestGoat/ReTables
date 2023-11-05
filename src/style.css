@@ -9,6 +9,7 @@
 
 .md-table-col {
   padding: 8px;
+  border: 1px solid var(--text-normal);
 }
 
 .md-table-col-left {

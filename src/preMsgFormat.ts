@@ -40,6 +40,14 @@ function formatTableWithHTML(table: string[][]): string {
   const spaceSize = getTextWidth(" ")
   const dashSize = getTextWidth("-")
   const colonSize = getTextWidth(":")
+  const vLineSize = getTextWidth("|")
+
+  const avgColSize = colSizes.reduce((v, c) => v + c) + colSizes.length * (spaceSize * 2 + vLineSize) + vLineSize
+
+  // compact mode, TODO: Make configurable
+  if (avgColSize > 560) {
+    return formatTableCompact(table, just)
+  }
 
   return table.map((row, rowI) => {
     if (rowI == 1) {
@@ -85,6 +93,26 @@ function formatTableWithHTML(table: string[][]): string {
       
       return pad + v
     }).join(" | ")} |`
+  }).join("\n")
+}
+
+function formatTableCompact(table: string[][], just: Justification[]): string {
+  return table.map((row, rowI) => {
+    if (rowI == 1) {
+      return `|${row.map((_, i) => {
+        switch (just[i]) {
+          case Justification.LEFT:
+            return ":--"
+          case Justification.RIGHT:
+            return "--:"
+          case Justification.CENTER:
+            return ":-:"
+        }
+        return ""
+      }).join("|")}|`
+    }
+
+    return `| ${row.join(" | ")} |`
   }).join("\n")
 }
 

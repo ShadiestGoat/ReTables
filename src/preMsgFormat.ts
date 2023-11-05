@@ -1,7 +1,92 @@
 import { Injector, common } from "replugged";
-import { formatTable, parseTable } from "./utils";
+import { Justification, createJustification, formatTable, parseTable } from "./utils";
 
 const { messages } = common
+
+const canvasCtx = (() => {
+  const canvas = document.createElement("canvas")
+  
+  const ctx = canvas.getContext("2d")!;
+  ctx.font = `400 16px "gg sans"`;
+  return ctx
+})()
+
+function getTextWidth(t: string): number {
+  return canvasCtx.measureText(t).width
+}
+
+function formatTableWithHTML(table: string[][]): string {
+  if (!table.length || !table[0].length) {
+    return ""
+  }
+  
+  const just = createJustification(table[table.length == 1 ? 0 : 1])
+  const colSizes: number[] = table[0].map(() => 0)
+
+  table.forEach((row, rowI) => {
+    if (rowI == 1) {
+      // Don't change table size bc of the god damn splice
+      return
+    }
+
+    row.forEach((v, i) => {
+      const size = getTextWidth(v)
+      if (size > colSizes[i]) {
+        colSizes[i] = size
+      }
+    })
+  })
+
+  const spaceSize = getTextWidth(" ")
+  const dashSize = getTextWidth("-")
+  const colonSize = getTextWidth(":")
+
+  return table.map((row, rowI) => {
+    if (rowI == 1) {
+      return `|${row.map((_, i) => {
+        let sizeNeeded = colSizes[i] + spaceSize * 2 - colonSize
+
+        if (just[i] == Justification.CENTER) {
+          sizeNeeded -= colonSize
+        }
+
+        const dashStr = "-".repeat(Math.floor(sizeNeeded/dashSize))
+
+        switch (just[i]) {
+          case Justification.LEFT:
+            return `:${dashStr}`
+          case Justification.RIGHT:
+            return `${dashStr}:`
+          case Justification.CENTER:
+            return `:${dashStr}:`
+        }
+        return ""
+      }).join("|")}|`
+    }
+
+    return `| ${row.map((v, i) => {
+      const sizeNeeded = colSizes[i] - getTextWidth(v)
+      const padSpaces = Math.floor(sizeNeeded/spaceSize)
+
+      if (just[i] == Justification.CENTER) {
+        const half = padSpaces/2
+        if (padSpaces % 2 == 0) {
+          return " ".repeat(half) + v + " ".repeat(half)
+        }
+        
+        return " ".repeat(Math.floor(half)) + v + " ".repeat(Math.ceil(half))
+      }
+
+      const pad = " ".repeat(padSpaces)
+
+      if (just[i] == Justification.LEFT) {
+        return v + pad
+      }
+      
+      return pad + v
+    }).join(" | ")} |`
+  }).join("\n")
+}
 
 function format(content: string): string {
   let lines = content.split("\n");
@@ -30,7 +115,7 @@ function format(content: string): string {
 
         const table = parseTable(possibleLines);
         if (table) {
-          let str = formatTable(table.table).split("\n");
+          let str = formatTableWithHTML(table.table).split("\n");
 
           if (isBQ) {
             str = str.map((v) => `> ${v}`);

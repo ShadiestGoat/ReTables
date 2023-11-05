@@ -1,20 +1,20 @@
 {
-  "id": "dev.replugged.PluginTemplate",
-  "name": "Plugin Template",
-  "description": "A plugin template",
+  "id": "eu.shadygoat.Tables",
+  "name": "Tables",
+  "description": "Add tables to Discord <3",
   "author": {
-    "name": "replugged",
-    "discordID": "1000992611840049192",
-    "github": "replugged-org"
+    "name": "Lucy Dryaeva",
+    "discordID": "376079696489742338",
+    "github": "ShadiestGoat"
   },
   "version": "1.0.0",
   "updater": {
     "type": "github",
-    "id": "replugged-org/plugin-template"
+    "id": "ShadiestGoat/ReTables"
   },
   "license": "MIT",
   "type": "replugged-plugin",
   "renderer": "src/index.ts",
-  "source": "https://github.com/replugged-org/plugin-template",
+  "source": "https://github.com/ShadiestGoat/ReTables",
   "image": ["https://i.imgur.com/14CNs3a.png?CHANGE-THIS-URL"]
 }

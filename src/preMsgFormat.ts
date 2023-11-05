@@ -1,5 +1,6 @@
 import { Injector, common } from "replugged";
 import { Justification, createJustification, formatTable, parseTable } from "./utils";
+import { cfg } from "./settings/common"
 
 const { messages } = common
 
@@ -7,7 +8,7 @@ const canvasCtx = (() => {
   const canvas = document.createElement("canvas")
   
   const ctx = canvas.getContext("2d")!;
-  ctx.font = `400 16px "gg sans"`;
+  ctx.font = cfg.get("canvasFont");
   return ctx
 })()
 
@@ -45,7 +46,7 @@ function formatTableWithHTML(table: string[][]): string {
   const avgColSize = colSizes.reduce((v, c) => v + c) + colSizes.length * (spaceSize * 2 + vLineSize) + vLineSize
 
   // compact mode, TODO: Make configurable
-  if (avgColSize > 560) {
+  if (cfg.get("autoCompactMode") && avgColSize > cfg.get("maxPXWidth")) {
     return formatTableCompact(table, just)
   }
 
@@ -96,7 +97,7 @@ function formatTableWithHTML(table: string[][]): string {
   }).join("\n")
 }
 
-function formatTableCompact(table: string[][], just: Justification[]): string {
+function formatTableCompact(table: string[][], just: Justification[] = createJustification(table[table.length == 1 ? 0 : 1])): string {
   return table.map((row, rowI) => {
     if (rowI == 1) {
       return `|${row.map((_, i) => {
@@ -117,6 +118,10 @@ function formatTableCompact(table: string[][], just: Justification[]): string {
 }
 
 function format(content: string): string {
+  if (cfg.get("formatter") == "none") {
+    return content
+  }
+
   let lines = content.split("\n");
 
   lines.push("")
@@ -143,13 +148,27 @@ function format(content: string): string {
 
         const table = parseTable(possibleLines);
         if (table) {
-          let str = formatTableWithHTML(table.table).split("\n");
+          let str = ""
 
-          if (isBQ) {
-            str = str.map((v) => `> ${v}`);
+          switch (cfg.get("formatter")) {
+            case "character":
+              str = formatTable(table.table)
+              break
+            case "fontSize":
+              str = formatTableWithHTML(table.table)
+              break
+            case "compact":
+              str = formatTableCompact(table.table)
+              break
           }
 
-          lines = [...lines.slice(0, lastI), ...str, ...lines.slice(i)];
+          let strLines = str.split("\n")
+          
+          if (isBQ) {
+            strLines = strLines.map((v) => `> ${v}`);
+          }
+
+          lines = [...lines.slice(0, lastI), ...strLines, ...lines.slice(i)];
         }
       }
 

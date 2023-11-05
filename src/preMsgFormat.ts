@@ -50,7 +50,7 @@ function formatTableWithHTML(table: string[][]): string {
           sizeNeeded -= colonSize
         }
 
-        const dashStr = "-".repeat(Math.floor(sizeNeeded/dashSize))
+        const dashStr = "-".repeat(Math.round(sizeNeeded/dashSize))
 
         switch (just[i]) {
           case Justification.LEFT:
@@ -66,7 +66,7 @@ function formatTableWithHTML(table: string[][]): string {
 
     return `| ${row.map((v, i) => {
       const sizeNeeded = colSizes[i] - getTextWidth(v)
-      const padSpaces = Math.floor(sizeNeeded/spaceSize)
+      const padSpaces = Math.round(sizeNeeded/spaceSize)
 
       if (just[i] == Justification.CENTER) {
         const half = padSpaces/2

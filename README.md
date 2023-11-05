@@ -22,4 +22,4 @@ A plug to render markdown tables, in discord.
   - [ ] shift+tab: go to previous cell on same row, or go to last cell on previous row
   - [ ] enter: go to or create first cell on next row
 - [ ] Configurable column justification keybinds
-- [ ] Configurable table formatter
+- [ ] Configurable table formatter (either use font size based or character based, + add an opt for font size estimate? idk)

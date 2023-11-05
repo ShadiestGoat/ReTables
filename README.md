@@ -1,11 +1,22 @@
-# Replugged plugin template
+# Replugged Tables
 
-See the [plugin development guide](https://guide.replugged.dev/docs/plugins/getting-started) for
-more information on using this template.
+A plug to render markdown tables, in discord.
 
-# License
+## Features
 
-The [plugin template](https://github.com/replugged-org/plugin-template) is licensed under the
-[MIT](https://opensource.org/license/mit/) license. However, addons using this template are not
-necessarily licensed under MIT. Developers are encouraged to add a license file to their repository,
-but if none exists, the repository should be considered as unlicensed.
+- Renders Tables!!!!
+  - Including column alignment
+- Utility classes:
+  - Table: md-table
+  - Rows: md-table-row
+  - Alignment: md-col-{left/center/right}
+  - Heading columns: md-table-h
+
+## TODO Before Release
+
+- [ ] Excel-like tab navigation:
+  - [ ] tab: go to or create next cell in same row
+  - [ ] shift+tab: go to previous cell on same row, or go to last cell on previous row
+  - [ ] enter: go to or create first cell on next row
+- [ ] Configurable column justification keybinds
+- [ ] Pre-format tables before sending them

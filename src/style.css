@@ -1,0 +1,18 @@
+.md-table {
+  border-collapse: collapse;
+}
+
+.md-table-h {
+  font-weight: bold;
+  font-size: 130%;
+}
+
+.md-col-left {
+  text-align: left;
+}
+.md-col-center {
+  text-align: center;
+}
+.md-col-right {
+  text-align: right;
+}

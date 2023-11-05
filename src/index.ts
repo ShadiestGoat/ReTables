@@ -5,7 +5,7 @@ import { createPreMsgFormatter } from "./preMsgFormat";
 
 const inject = new Injector();
 
-export async function start(): Promise<void> {
+export function start(): void {
   // Renders a table in the messages
   createTableParser(inject)
 
